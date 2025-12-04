@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getCustomers, addCustomer } from "../../services/api";
 
 export default function TenantCRM() {
@@ -14,10 +15,15 @@ export default function TenantCRM() {
     phone: "",
     company_name: "",
     address: "",
-    tenant_code: tenantCode,
+    tenant_code: tenantCode ?? "",
   });
 
   useEffect(() => {
+    if (!tenantCode) {
+      navigate("/login", { replace: true });
+      return;
+    }
+
     loadCustomers();
   }, [tenantCode]);
 

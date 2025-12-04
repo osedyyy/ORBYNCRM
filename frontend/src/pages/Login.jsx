@@ -32,6 +32,7 @@ export default function Login() {
       localStorage.setItem("user_id", result.user.id);
       localStorage.setItem("role", result.user.role);
       localStorage.setItem("user_email", result.user.email);
+      localStorage.setItem("tenant", JSON.stringify(result.tenant));
       localStorage.setItem("tenant_code", result.tenant.code ?? "master");
       localStorage.setItem("tenant_name", result.tenant.name);
 
