@@ -1,40 +1,10 @@
 HOW TO START THE CRM (FRONTEND + BACKEND)
 
-  --------------------------------
-  1. START THE BACKEND (FASTAPI)
-  --------------------------------
+ 
+Activate your virtual environment: venv\Scripts\activate
 
-STEP 1: Open PowerShell.
+Backend: uvicorn app.main:app --reload
 
-STEP 2: Navigate to your backend folder: cd C:_crm
+press exit to get out the venv
 
-STEP 3: Activate your virtual environment: venv
-
-STEP 4: Run the FastAPI server: uvicorn app.main:app –reload
-
-Backend will now be running at: http://127.0.0.1:8000 Swagger docs:
-http://127.0.0.1:8000/docs
-
-  --------------------------------------
-  2. START THE FRONTEND (REACT + VITE)
-  --------------------------------------
-
-STEP 1: Open a second PowerShell window (DO NOT CLOSE THE BACKEND).
-
-STEP 2: Navigate to the frontend: cd C:_crm
-
-STEP 3: Start React: npm run dev
-
-Frontend runs at: http://localhost:5173
-
-  ------------------
-  3. USING THE CRM
-  ------------------
-
--   Add customers using the form on the frontend.
--   Customers will appear in the table automatically.
--   All data is saved to the SQLite database through FastAPI.
-
-  -------
-  DONE!
-  -------
+click npm run dev in front end folder
