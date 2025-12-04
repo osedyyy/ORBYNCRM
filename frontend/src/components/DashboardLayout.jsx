@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const navLinks = [
   { label: "Overview", href: "/admin" },
@@ -13,9 +13,15 @@ function initialsFromEmail(email = "") {
 
 export default function DashboardLayout({ title, subtitle, children }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const userEmail = typeof window !== "undefined" ? localStorage.getItem("user_email") : "";
   const tenantName = typeof window !== "undefined" ? localStorage.getItem("tenant_name") : "Master Tenant";
   const role = typeof window !== "undefined" ? localStorage.getItem("role") : "superadmin";
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-50 flex">
@@ -46,13 +52,25 @@ export default function DashboardLayout({ title, subtitle, children }) {
           })}
         </nav>
 
-        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Session</p>
-          <p className="text-sm text-white font-semibold mt-1">{tenantName || "Master Tenant"}</p>
-          <p className="text-xs text-slate-400">{userEmail || "superadmin@crm"}</p>
-          <p className="mt-2 inline-flex items-center gap-2 text-[11px] text-emerald-300 bg-emerald-500/10 px-2 py-1 rounded-full">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" /> {role || "superadmin"}
-          </p>
+        <div className="space-y-3">
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Session</p>
+            <p className="text-sm text-white font-semibold mt-1">{tenantName || "Master Tenant"}</p>
+            <p className="text-xs text-slate-400">{userEmail || "superadmin@crm"}</p>
+            <p className="mt-2 inline-flex items-center gap-2 text-[11px] text-emerald-300 bg-emerald-500/10 px-2 py-1 rounded-full">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" /> {role || "superadmin"}
+            </p>
+          </div>
+          
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-sm font-semibold text-red-300 transition-all hover:border-red-500/50 hover:bg-red-500/20 hover:text-red-200"
+          >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Logout
+          </button>
         </div>
       </aside>
 
@@ -63,7 +81,7 @@ export default function DashboardLayout({ title, subtitle, children }) {
             <h1 className="text-2xl font-semibold text-white">{title}</h1>
             {subtitle && <p className="text-sm text-slate-400 mt-1">{subtitle}</p>}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="text-right">
               <p className="text-sm font-semibold text-white">{userEmail || "superadmin@crm"}</p>
               <p className="text-xs text-slate-400">Tenant: {tenantName || "master"}</p>
@@ -71,6 +89,15 @@ export default function DashboardLayout({ title, subtitle, children }) {
             <div className="h-11 w-11 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-purple-900/60">
               {initialsFromEmail(userEmail)}
             </div>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-300 transition-all hover:border-red-500/50 hover:bg-red-500/20 hover:text-red-200"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Logout
+            </button>
           </div>
         </header>
 

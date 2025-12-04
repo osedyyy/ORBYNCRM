@@ -138,10 +138,11 @@ def contact_to_contact_out(contact):
 
 # ---------- CUSTOMER (Legacy) ----------
 def create_customer(db: Session, customer_in: schemas.CustomerCreate, tenant):
-    contact_in = schemas.ContactCreate(
-        **customer_in.dict(),
-        tenant_code=tenant.code
-    )
+    customer_dict = customer_in.dict()
+    if not customer_dict.get('tenant_code'):
+        customer_dict['tenant_code'] = tenant.code
+    
+    contact_in = schemas.ContactCreate(**customer_dict)
     contact = create_contact(db, contact_in, tenant)
     return contact_to_contact_out(contact)
 

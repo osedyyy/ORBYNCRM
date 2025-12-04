@@ -18,9 +18,10 @@ function sortData(items, config) {
 
 function StatPill({ label, value }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 shadow-inner shadow-black/30">
-      <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{label}</p>
-      <p className="text-2xl font-semibold text-white">{value}</p>
+    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 px-5 py-4 shadow-xl shadow-black/30 backdrop-blur-sm transition-all hover:border-purple-400/50 hover:shadow-purple-900/30">
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+      <p className="relative text-xs font-medium uppercase tracking-[0.24em] text-slate-400/80">{label}</p>
+      <p className="relative mt-1 text-3xl font-bold text-white">{value}</p>
     </div>
   );
 }
@@ -224,261 +225,297 @@ export default function AdminDashboard() {
       title="Super Admin Dashboard"
       subtitle="Manage tenants, users, and permissions with guided forms and quick filters."
     >
-      <div className="grid gap-6 md:grid-cols-3 mb-6">
-        <StatPill label="Companies" value={tenants.length} />
-        <StatPill label="Users" value={users.length} />
-        <StatPill label="Managers" value={users.filter((u) => u.role === "manager").length} />
+      <div className="mb-8">
+        <div className="mb-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-purple-300">Overview</h2>
+          <p className="text-xs text-slate-400">Real-time statistics across your organization</p>
+        </div>
+        <div className="grid gap-5 md:grid-cols-3">
+          <StatPill label="Companies" value={tenants.length} />
+          <StatPill label="Users" value={users.length} />
+          <StatPill label="Managers" value={users.filter((u) => u.role === "manager").length} />
+        </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6" id="tenants">
-        <div className="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/40 p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-purple-300">Tenant setup</p>
-              <h2 className="text-xl font-semibold text-white">Create new company</h2>
+      <div className="mb-6">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-purple-300 mb-1">Management Tools</h2>
+        <p className="text-xs text-slate-400">Create and configure companies and users</p>
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-6 mb-8" id="tenants">
+        <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 shadow-2xl shadow-black/50 backdrop-blur-sm transition-all hover:border-purple-400/50">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-indigo-500/10 opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="relative p-6">
+            <div className="mb-5">
+              <div className="mb-1 inline-flex items-center gap-2 rounded-lg bg-purple-500/10 px-3 py-1 text-xs font-medium uppercase tracking-wider text-purple-300">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-purple-400" />
+                Tenant setup
+              </div>
+              <h2 className="mt-2 text-2xl font-bold text-white">Create new company</h2>
+              <p className="mt-1 text-sm text-slate-400">Add a new organization to your CRM system</p>
             </div>
-          </div>
 
-          <form onSubmit={handleCreateTenant} className="space-y-4">
-            <FormField
-              label="Company name"
-              helperText="We will automatically create a tenant code based on this name."
-              required
-              error={errors.companyName}
-            >
-              <input
-                className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60"
-                placeholder="e.g. Acme Corp"
-                value={companyName}
-                onChange={(e) => {
-                  setCompanyName(e.target.value);
-                  setErrors((prev) => ({ ...prev, companyName: "" }));
-                }}
+            <form onSubmit={handleCreateTenant} className="space-y-5">
+              <FormField
+                label="Company name"
+                helperText="We will automatically create a tenant code based on this name."
+                required
+                error={errors.companyName}
+              >
+                <input
+                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60 transition-all"
+                  placeholder="e.g. Acme Corp"
+                  value={companyName}
+                  onChange={(e) => {
+                    setCompanyName(e.target.value);
+                    setErrors((prev) => ({ ...prev, companyName: "" }));
+                  }}
+                  disabled={creatingTenant}
+                />
+              </FormField>
+
+              <button
+                type="submit"
                 disabled={creatingTenant}
-              />
-            </FormField>
-
-            <button
-              type="submit"
-              disabled={creatingTenant}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-purple-900/40 transition hover:from-purple-400 hover:to-indigo-400 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {creatingTenant ? "Creating..." : "Create company"}
-            </button>
-          </form>
+                className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-900/40 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-purple-900/50 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
+              >
+                {creatingTenant ? "Creating..." : "Create company"}
+              </button>
+            </form>
+          </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 shadow-xl shadow-black/40 p-5" id="users">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-purple-300">User onboarding</p>
-              <h2 className="text-xl font-semibold text-white">Invite a teammate</h2>
-            </div>
-          </div>
-
-          <form onSubmit={handleCreateUser} className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <FormField label="Full name" helperText="How this user will appear in the CRM.">
-                <input
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60"
-                  placeholder="Jane Smith"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  disabled={creatingUser}
-                />
-              </FormField>
-              <FormField label="Email" helperText="Login email for this user.">
-                <input
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60"
-                  placeholder="jane@company.com"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={creatingUser}
-                />
-              </FormField>
+        <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 shadow-2xl shadow-black/50 backdrop-blur-sm transition-all hover:border-purple-400/50" id="users">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-purple-500/10 opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="relative p-6">
+            <div className="mb-5">
+              <div className="mb-1 inline-flex items-center gap-2 rounded-lg bg-indigo-500/10 px-3 py-1 text-xs font-medium uppercase tracking-wider text-indigo-300">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-400" />
+                User onboarding
+              </div>
+              <h2 className="mt-2 text-2xl font-bold text-white">Invite a teammate</h2>
+              <p className="mt-1 text-sm text-slate-400">Add new users and assign roles</p>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <form onSubmit={handleCreateUser} className="space-y-5">
+              <div className="grid gap-4 md:grid-cols-2">
+                <FormField label="Full name" helperText="How this user will appear in the CRM.">
+                  <input
+                    className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60 transition-all"
+                    placeholder="Jane Smith"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    disabled={creatingUser}
+                  />
+                </FormField>
+                <FormField label="Email" helperText="Login email for this user.">
+                  <input
+                    className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60 transition-all"
+                    placeholder="jane@company.com"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={creatingUser}
+                  />
+                </FormField>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <FormField
+                  label="Password"
+                  helperText="Set an initial password; users should change it after first login."
+                  required
+                  error={errors.password}
+                >
+                  <input
+                    className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60 transition-all"
+                    placeholder="Secure password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setErrors((prev) => ({ ...prev, password: "" }));
+                    }}
+                    disabled={creatingUser}
+                  />
+                </FormField>
+                <FormField label="Role" helperText="Choose permissions for this teammate.">
+                  <select
+                    className="w-full rounded-lg border border-white/10 bg-black/60 px-3 py-2.5 text-sm text-white focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60 transition-all"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    disabled={creatingUser}
+                  >
+                    <option value="rep">Sales Rep</option>
+                    <option value="manager">Manager</option>
+                  </select>
+                </FormField>
+              </div>
+
               <FormField
-                label="Password"
-                helperText="Set an initial password; users should change it after first login."
+                label="Assign to company"
+                helperText="Users must belong to a tenant to access its CRM."
                 required
-                error={errors.password}
+                error={errors.tenantCode}
               >
-                <input
-                  className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60"
-                  placeholder="Secure password"
-                  type="password"
-                  value={password}
+                <select
+                  className="w-full rounded-lg border border-white/10 bg-black/60 px-3 py-2.5 text-sm text-white focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60 transition-all"
+                  value={tenantCode}
                   onChange={(e) => {
-                    setPassword(e.target.value);
-                    setErrors((prev) => ({ ...prev, password: "" }));
+                    setTenantCode(e.target.value);
+                    setErrors((prev) => ({ ...prev, tenantCode: "" }));
                   }}
-                  disabled={creatingUser}
-                />
-              </FormField>
-              <FormField label="Role" helperText="Choose permissions for this teammate.">
-              <select
-                className="w-full rounded-lg border border-white/10 bg-black/60 px-3 py-2 text-sm text-white focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                disabled={creatingUser}
-              >
-                  <option value="rep">Sales Rep</option>
-                  <option value="manager">Manager</option>
+                  disabled={creatingUser || loadingTenants}
+                >
+                  <option value="">Select company</option>
+                  {tenants.map((t) => (
+                    <option key={t.id} value={t.code}>
+                      {t.name}
+                    </option>
+                  ))}
                 </select>
               </FormField>
-            </div>
 
-            <FormField
-              label="Assign to company"
-              helperText="Users must belong to a tenant to access its CRM."
-              required
-              error={errors.tenantCode}
-            >
-              <select
-                className="w-full rounded-lg border border-white/10 bg-black/60 px-3 py-2 text-sm text-white focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 disabled:opacity-60"
-                value={tenantCode}
-                onChange={(e) => {
-                  setTenantCode(e.target.value);
-                  setErrors((prev) => ({ ...prev, tenantCode: "" }));
-                }}
-                disabled={creatingUser || loadingTenants}
+              <button
+                type="submit"
+                disabled={creatingUser}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-900/40 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-purple-900/50 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
               >
-                <option value="">Select company</option>
-                {tenants.map((t) => (
-                  <option key={t.id} value={t.code}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-            </FormField>
-
-            <button
-              type="submit"
-              disabled={creatingUser}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-purple-900/40 transition hover:from-purple-400 hover:to-indigo-400 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {creatingUser ? "Creating user..." : "Create user"}
-            </button>
-          </form>
+                {creatingUser ? "Creating user..." : "Create user"}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6 mt-8">
-        <div className="rounded-2xl border border-white/10 bg-black/40 shadow-xl shadow-black/40 p-5" id="tenants-list">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-3">
-            <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-purple-300">Companies</p>
-              <h3 className="text-lg font-semibold text-white">Tenant directory</h3>
-            </div>
-            <input
-              className="w-full sm:w-64 rounded-lg border border-white/10 bg-black/50 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40"
-              placeholder="Filter by name or code"
-              value={tenantSearch}
-              onChange={(e) => setTenantSearch(e.target.value)}
-            />
-          </div>
+      <div className="mb-6">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-purple-300 mb-1">Directory</h2>
+        <p className="text-xs text-slate-400">Browse and search all companies and users</p>
+      </div>
 
-          <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
-            <table className="min-w-full text-sm">
-              <thead className="bg-white/5 text-left">
-                <tr>
-                  <th className="px-4 py-3"><SortableHeader label="Company" column="name" entity="tenants" sortConfig={sortConfig} onSort={toggleSort} /></th>
-                  <th className="px-4 py-3"><SortableHeader label="Code" column="code" entity="tenants" sortConfig={sortConfig} onSort={toggleSort} /></th>
-                </tr>
-              </thead>
-              <tbody>
-                {loadingTenants && (
+      <div className="grid lg:grid-cols-2 gap-6">
+        <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 to-black/40 shadow-2xl shadow-black/50 backdrop-blur-sm" id="tenants-list">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="relative p-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-lg bg-purple-500/10 px-2.5 py-1 text-xs font-medium uppercase tracking-wider text-purple-300 mb-2">
+                  Companies
+                </div>
+                <h3 className="text-xl font-bold text-white">Tenant directory</h3>
+              </div>
+              <input
+                className="w-full sm:w-64 rounded-lg border border-white/10 bg-black/50 px-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 transition-all"
+                placeholder="Filter by name or code"
+                value={tenantSearch}
+                onChange={(e) => setTenantSearch(e.target.value)}
+              />
+            </div>
+
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
+              <table className="min-w-full text-sm">
+                <thead className="bg-white/5 text-left">
                   <tr>
-                    <td className="px-4 py-4 text-slate-400" colSpan={3}>Loading tenants...</td>
+                    <th className="px-4 py-3"><SortableHeader label="Company" column="name" entity="tenants" sortConfig={sortConfig} onSort={toggleSort} /></th>
+                    <th className="px-4 py-3"><SortableHeader label="Code" column="code" entity="tenants" sortConfig={sortConfig} onSort={toggleSort} /></th>
                   </tr>
-                )}
-                {!loadingTenants && sortedTenants.length === 0 && (
-                  <tr>
-                    <td className="px-4 py-4 text-slate-400" colSpan={3}>No tenants found.</td>
-                  </tr>
-                )}
-                {!loadingTenants &&
-                  sortedTenants.map((tenant) => (
-                    <tr key={tenant.id} className="border-t border-white/5 hover:bg-white/5">
-                      <td className="px-4 py-3 font-semibold text-white">{tenant.name}</td>
-                      <td className="px-4 py-3 text-slate-300">{tenant.code}</td>
+                </thead>
+                <tbody>
+                  {loadingTenants && (
+                    <tr>
+                      <td className="px-4 py-4 text-slate-400" colSpan={3}>Loading tenants...</td>
                     </tr>
-                  ))}
-              </tbody>
-            </table>
+                  )}
+                  {!loadingTenants && sortedTenants.length === 0 && (
+                    <tr>
+                      <td className="px-4 py-4 text-slate-400" colSpan={3}>No tenants found.</td>
+                    </tr>
+                  )}
+                  {!loadingTenants &&
+                    sortedTenants.map((tenant) => (
+                      <tr key={tenant.id} className="border-t border-white/5 hover:bg-white/5 transition-colors">
+                        <td className="px-4 py-3 font-semibold text-white">{tenant.name}</td>
+                        <td className="px-4 py-3 text-slate-300">{tenant.code}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-black/40 shadow-xl shadow-black/40 p-5" id="users-list">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-3">
-            <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-purple-300">Team</p>
-              <h3 className="text-lg font-semibold text-white">User directory</h3>
+        <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 to-black/40 shadow-2xl shadow-black/50 backdrop-blur-sm" id="users-list">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="relative p-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-lg bg-indigo-500/10 px-2.5 py-1 text-xs font-medium uppercase tracking-wider text-indigo-300 mb-2">
+                  Team
+                </div>
+                <h3 className="text-xl font-bold text-white">User directory</h3>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <select
+                  className="rounded-lg border border-white/10 bg-black/60 px-3 py-2.5 text-sm text-white focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 transition-all"
+                  value={userRoleFilter}
+                  onChange={(e) => setUserRoleFilter(e.target.value)}
+                >
+                  <option value="all">All roles</option>
+                  <option value="manager">Managers</option>
+                  <option value="rep">Sales reps</option>
+                </select>
+                <input
+                  className="rounded-lg border border-white/10 bg-black/50 px-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 sm:w-64 transition-all"
+                  placeholder="Search name, email, tenant"
+                  value={userSearch}
+                  onChange={(e) => setUserSearch(e.target.value)}
+                />
+              </div>
             </div>
-            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-              <select
-                className="rounded-lg border border-white/10 bg-black/60 px-3 py-2 text-sm text-white focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40"
-                value={userRoleFilter}
-                onChange={(e) => setUserRoleFilter(e.target.value)}
-              >
-                <option value="all">All roles</option>
-                <option value="manager">Managers</option>
-                <option value="rep">Sales reps</option>
-              </select>
-              <input
-                className="rounded-lg border border-white/10 bg-black/50 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/40 sm:w-64"
-                placeholder="Search name, email, tenant"
-                value={userSearch}
-                onChange={(e) => setUserSearch(e.target.value)}
-              />
-            </div>
-          </div>
 
-          <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
-            <table className="min-w-full text-sm">
-              <thead className="bg-white/5 text-left">
-                <tr>
-                  <th className="px-4 py-3"><SortableHeader label="Name" column="full_name" entity="users" sortConfig={sortConfig} onSort={toggleSort} /></th>
-                  <th className="px-4 py-3"><SortableHeader label="Role" column="role" entity="users" sortConfig={sortConfig} onSort={toggleSort} /></th>
-                  <th className="px-4 py-3"><SortableHeader label="Tenant" column="tenant_code" entity="users" sortConfig={sortConfig} onSort={toggleSort} /></th>
-                </tr>
-              </thead>
-              <tbody>
-                {loadingUsers && (
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
+              <table className="min-w-full text-sm">
+                <thead className="bg-white/5 text-left">
                   <tr>
-                    <td className="px-4 py-4 text-slate-400" colSpan={4}>Loading users...</td>
+                    <th className="px-4 py-3"><SortableHeader label="Name" column="full_name" entity="users" sortConfig={sortConfig} onSort={toggleSort} /></th>
+                    <th className="px-4 py-3"><SortableHeader label="Role" column="role" entity="users" sortConfig={sortConfig} onSort={toggleSort} /></th>
+                    <th className="px-4 py-3"><SortableHeader label="Tenant" column="tenant_code" entity="users" sortConfig={sortConfig} onSort={toggleSort} /></th>
                   </tr>
-                )}
-                {!loadingUsers && sortedUsers.length === 0 && (
-                  <tr>
-                    <td className="px-4 py-4 text-slate-400" colSpan={4}>No users found.</td>
-                  </tr>
-                )}
-                {!loadingUsers &&
-                  sortedUsers.map((user) => (
-                    <tr key={user.id} className="border-t border-white/5 hover:bg-white/5">
-                      <td className="px-4 py-3">
-                        <p className="font-semibold text-white">{user.full_name}</p>
-                        <p className="text-xs text-slate-400">{user.email}</p>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold ${
-                          user.role === "manager"
-                            ? "bg-amber-500/10 text-amber-200 border border-amber-300/40"
-                            : "bg-emerald-500/10 text-emerald-200 border border-emerald-300/40"
-                        }`}>
-                          <span className="h-1.5 w-1.5 rounded-full bg-current" />
-                          {user.roleLabel}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-slate-200">{user.tenant_code || "—"}</td>
+                </thead>
+                <tbody>
+                  {loadingUsers && (
+                    <tr>
+                      <td className="px-4 py-4 text-slate-400" colSpan={4}>Loading users...</td>
                     </tr>
-                  ))}
-              </tbody>
-            </table>
+                  )}
+                  {!loadingUsers && sortedUsers.length === 0 && (
+                    <tr>
+                      <td className="px-4 py-4 text-slate-400" colSpan={4}>No users found.</td>
+                    </tr>
+                  )}
+                  {!loadingUsers &&
+                    sortedUsers.map((user) => (
+                      <tr key={user.id} className="border-t border-white/5 hover:bg-white/5 transition-colors">
+                        <td className="px-4 py-3">
+                          <p className="font-semibold text-white">{user.full_name}</p>
+                          <p className="text-xs text-slate-400">{user.email}</p>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-semibold ${
+                            user.role === "manager"
+                              ? "bg-amber-500/10 text-amber-200 border border-amber-300/40"
+                              : "bg-emerald-500/10 text-emerald-200 border border-emerald-300/40"
+                          }`}>
+                            <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                            {user.roleLabel}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-slate-200">{user.tenant_code || "—"}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

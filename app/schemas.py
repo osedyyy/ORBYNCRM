@@ -46,7 +46,7 @@ class TenantOut(BaseModel):
     id: int
     name: str
     code: str
-    primary_color: str
+    primary_color: Optional[str] = None
 
     class Config:
         from_attributes = True

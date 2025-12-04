@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+// Components
+import Navbar from "./components/Navbar";
+
 // Pages
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -8,6 +11,7 @@ import TenantCRM from "./pages/crm/TenantCRM";
 export default function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
 
         {/* LOGIN PAGE */}

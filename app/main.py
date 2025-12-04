@@ -182,6 +182,11 @@ def list_tenants(db: Session = Depends(get_db)):
 
 @app.post("/tenants", response_model=schemas.TenantOut)
 def create_tenant(tenant: schemas.TenantCreate, db: Session = Depends(get_db)):
+    # Check if tenant code already exists
+    existing = crud.get_tenant_by_code(db, tenant.code)
+    if existing:
+        raise HTTPException(status_code=400, detail=f"Tenant with code '{tenant.code}' already exists")
+    
     db_tenant = crud.create_tenant(db, tenant.name, tenant.code, tenant.primary_color)
     return db_tenant
 
